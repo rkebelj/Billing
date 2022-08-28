@@ -17,13 +17,11 @@ namespace Billing.Data
             {
                 new Bill
                 {
-                    Id = 1,
                     TestCustomer = "nekdo",
                     Progress = 1
                 },
                 new Bill
                 {
-                    Id = 2,
                     TestCustomer = "še en",
                     Progress = 33
                 }

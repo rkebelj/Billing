@@ -4,10 +4,10 @@ using Billing.Data.Entities;
 
 namespace Billing.Data;
 
-public class BillContext : DbContext
+public class BillingContext : DbContext
 {
 
-	public BillContext(DbContextOptions<BillContext> options) : base(options)
+	public BillingContext(DbContextOptions<BillingContext> options) : base(options)
 	{
 		//Database.Migrate();
 	}

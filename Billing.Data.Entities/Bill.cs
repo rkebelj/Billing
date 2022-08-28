@@ -14,6 +14,6 @@ namespace Billing.Data.Entities
         //public int WorkTypeId { get; set; }
         public string? TestCustomer { get; set; }
         [MaxLength(100)]
-        public int Progress { get; set; }
+        public string? Progress { get; set; }
     }
 }

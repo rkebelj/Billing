@@ -9,7 +9,7 @@ namespace Billing.Models.Bill
 {
 	public class BillForCreationModel: BillForManipulationModel
 	{
-		[Required(ErrorMessage = "Project ID should not be empty.")]
-		public int BillId { get; set; }
+		//[Required(ErrorMessage = "Project ID should not be empty.")]
+		//public int BillId { get; set; }
 	}
 }

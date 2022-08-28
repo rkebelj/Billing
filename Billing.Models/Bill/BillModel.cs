@@ -4,6 +4,6 @@
     {
         public int Id { get; set; }
         public string? TestCustomer { get; set; }
-        public int Progress { get; set; }
+        public string? Progress { get; set; }
     }
 }

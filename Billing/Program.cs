@@ -22,7 +22,7 @@ builder.Services.AddControllers(options =>
 }).AddXmlDataContractSerializerFormatters().AddControllersAsServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-builder.Services.AddDbContext<BillContext>(
+builder.Services.AddDbContext<BillingContext>(
 				options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
 builder.Services.AddTransient<IPropertyMappingService, PropertyMappingService>();
@@ -32,11 +32,31 @@ builder.Services.AddTransient<IBillRepo, BillRepo>();
 //builder.Services.AddTransient<ICustomFinanceDataRepo, CustomFinanceDataRepo>();
 //builder.Services.AddTransient<IWorkTypeRepo, WorkTypeRepo>();
 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+builder.Services.AddScoped<IUrlHelper>(implementationFactory =>
+{
+	var actionContext =
+	implementationFactory.GetRequiredService<IActionContextAccessor>().ActionContext;
+	var factory = implementationFactory.GetRequiredService<IUrlHelperFactory>();
+	return factory.GetUrlHelper(actionContext);
+});
+
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+builder.Services.AddSingleton<FileExtensionContentTypeProvider>();
+
+
 
 
 
 var app = builder.Build();
-
+if (app.Environment.IsDevelopment())
+{
+	app.UseSwagger();
+	app.UseSwaggerUI();
+}
 
 app.UseHttpsRedirection();
 
@@ -51,7 +71,7 @@ app.UseEndpoints(endpoints =>
 
 using (var scope = app.Services.CreateScope())
 {
-	var dbContext = scope.ServiceProvider.GetRequiredService<BillContext>();
+	var dbContext = scope.ServiceProvider.GetRequiredService<BillingContext>();
 	dbContext.EnsureSeedDataForContext();
 	// use context
 }

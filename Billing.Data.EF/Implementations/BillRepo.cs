@@ -17,11 +17,11 @@ namespace Billing.Data.EF.Implementations
 	public class BillRepo : IBillRepo
 	{
 
-		private readonly BillContext _context;
+		private readonly BillingContext _context;
 		private readonly IPropertyMappingService _propertyMappingService;
 
 
-		public BillRepo(BillContext context, IPropertyMappingService propertyMappingService)
+		public BillRepo(BillingContext context, IPropertyMappingService propertyMappingService)
 		{
 			_context = context;
 			_propertyMappingService = propertyMappingService ??

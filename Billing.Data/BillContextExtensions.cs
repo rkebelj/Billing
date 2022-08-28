@@ -9,7 +9,7 @@ namespace Billing.Data
 {
 	public static class BillContextExtensions
 	{
-        public static void EnsureSeedDataForContext(this BillContext context)
+        public static void EnsureSeedDataForContext(this BillingContext context)
         {
             context.Bill.RemoveRange(context.Bill);
 

@@ -361,3 +361,17 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+Billing.Data/Migrations/20220726155027_Migrations.cs
+Billing.Data/Migrations/20220726155027_Migrations.Designer.cs
+Billing.Data/Migrations/BillContextModelSnapshot.cs
+Billing/ClientApp/.angular/cache/angular-webpack/2e70dd759bc1d4142e10671d0751374d8d159094/0.pack
+Billing/ClientApp/.angular/cache/angular-webpack/2e70dd759bc1d4142e10671d0751374d8d159094/1.pack
+Billing/ClientApp/.angular/cache/angular-webpack/2e70dd759bc1d4142e10671d0751374d8d159094/2.pack
+Billing/ClientApp/.angular/cache/angular-webpack/2e70dd759bc1d4142e10671d0751374d8d159094/index.pack
+Billing/ClientApp/.angular/cache/angular-webpack/2e70dd759bc1d4142e10671d0751374d8d159094/index.pack.old
+Billing/ClientApp/.angular/cache/babel-webpack/3b17a7e693f31b7041d7520019714972.json
+Billing/ClientApp/.angular/cache/babel-webpack/544b72759d04bfeeff21630eec26f2a8.json
+Billing/ClientApp/.angular/cache/babel-webpack/5b8cec1ce797002f9fb4a9b2a6fad212.json
+Billing/ClientApp/.angular/cache/babel-webpack/7496d8dc854bfc7cb2b065d15ef2b6ce.json
+Billing/ClientApp/.angular/cache/babel-webpack/a3747df91aa35b20fd0208d384a6dc07.json
+Billing/ClientApp/.angular/cache/babel-webpack/b6550e2c950c4cb17361cba849f1894a.json

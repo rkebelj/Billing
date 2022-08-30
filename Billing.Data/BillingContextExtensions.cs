@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace Billing.Data
 {
-	public static class BillContextExtensions
+	public static class BillingContextExtensions
 	{
         public static void EnsureSeedDataForContext(this BillingContext context)
         {
@@ -18,12 +18,12 @@ namespace Billing.Data
                 new Bill
                 {
                     TestCustomer = "nekdo",
-                    Progress = 1
+                    Progress = "454"
                 },
                 new Bill
                 {
                     TestCustomer = "še en",
-                    Progress = 33
+                    Progress = "77"
                 }
             };
 

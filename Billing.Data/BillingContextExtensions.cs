@@ -9,18 +9,18 @@ namespace Billing.Data
 {
 	public static class BillingContextExtensions
 	{
-        public static void EnsureSeedDataForContext(this BillingContext context)
+        public static void EnsureSeedDataForContext(this InvoiceContext context)
         {
-            context.Bill.RemoveRange(context.Bill);
+            context.Invoice.RemoveRange(context.Invoice);
 
-            var workTypes = new List<Bill>()
+            var workTypes = new List<Invoice>()
             {
-                new Bill
+                new Invoice
                 {
                     TestCustomer = "nekdo",
                     Progress = "454"
                 },
-                new Bill
+                new Invoice
                 {
                     TestCustomer = "še en",
                     Progress = "77"
@@ -29,7 +29,7 @@ namespace Billing.Data
 
           
 
-            context.Bill.AddRange(workTypes);
+            context.Invoice.AddRange(workTypes);
 
             //using (var transaction = context.Database.BeginTransaction())
             //{

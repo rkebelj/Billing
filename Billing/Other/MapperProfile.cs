@@ -10,10 +10,10 @@ namespace Billing.API.Other
 	{
 		public MapperProfile()
 		{
-			CreateMap<Bill, BillModel>();
-			CreateMap<Bill, BillForUpdateModel>();
-			CreateMap<BillForCreationModel, Bill>();
-			CreateMap<BillForUpdateModel, Bill>();
+			CreateMap<Invoice, InvoiceModel>();
+			CreateMap<Invoice, InvoiceForUpdateModel>();
+			CreateMap<InvoiceForCreationModel , Invoice>();
+			CreateMap<InvoiceForUpdateModel, Invoice>();
 		
 		}
 	}

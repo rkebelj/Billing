@@ -21,7 +21,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Business", "Billing
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Helpers", "Billing.Helpers\Billing.Helpers.csproj", "{A35FEE70-3CE4-4CD1-B058-1CB523EF28C7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Billing.Data.EF", "Billing.Data.EF\Billing.Data.EF.csproj", "{DEFAC54B-7C7B-494D-A45C-253FCFF5443E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Billing.Data.EF", "Billing.Data.EF\Billing.Data.EF.csproj", "{DEFAC54B-7C7B-494D-A45C-253FCFF5443E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

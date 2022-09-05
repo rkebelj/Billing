@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Billing.Models.Bill
+namespace Billing.Models.Invoice
 {
-	public class BillForUpdateModel : BillForManipulationModel
+	public class InvoiceForUpdateModel : InvoiceForManipulationModel
 	{
 	}
 }

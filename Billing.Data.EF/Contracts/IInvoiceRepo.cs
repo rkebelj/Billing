@@ -6,17 +6,19 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Billing.Data.Entities;
+
 
 namespace Billing.Data.EF.Contracts
 {
-	public interface IBillRepo
+	public interface IInvoiceRepo
 	{
-		Task<PagedList<Bill>> GetBillAsync(BillResourceParameters BillParameters);
-		Task<Bill> GetBillAsync(int BillId);
-		Task AddBillAsync(Bill bill);
-		void UpdateBill(Bill Bill);
+		Task<PagedList<Invoice>> GetBillAsync(InvoiceResourceParameters BillParameters);
+		Task<Invoice> GetBillAsync(int BillId);
+		Task AddBillAsync(Invoice bill);
+		void UpdateBill(Invoice Bill);
 		Task<bool> BillExistsAsync(int BillId);
-		void DeleteBill(Bill Bill);
+		void DeleteBill(Invoice Bill);
 		Task<bool> SaveAsync();
 	}
 }

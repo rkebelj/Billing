@@ -22,7 +22,7 @@ namespace Billing.Business.Implementations
 
 		public PropertyMappingService()
 		{
-			_propertyMappings.Add(new PropertyMapping<BillModel, Bill>(_billMapping));
+			_propertyMappings.Add(new PropertyMapping<InvoiceModel, Invoice>(_billMapping));
 		}
 		public bool ValidMappingExistsFor<TSource, TDestination>(string fields)
 		{

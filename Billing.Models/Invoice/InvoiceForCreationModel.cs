@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Billing.Models.Bill
+namespace Billing.Models.Invoice
 {
-	public class BillForCreationModel: BillForManipulationModel
+	public class InvoiceForCreationModel : InvoiceForManipulationModel
 	{
 		//[Required(ErrorMessage = "Project ID should not be empty.")]
 		//public int BillId { get; set; }

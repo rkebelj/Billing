@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Billing.Helpers.ResourceParameters
 {
-	public class BillResourceParameters : ResourceParametersBase
+	public class InvoiceResourceParameters : ResourceParametersBase
 	{
 		protected override int maxPageSize { get { return 1000; } }
 

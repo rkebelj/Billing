@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 
-namespace Billing.Models.Bill
+namespace Billing.Models.Invoice
 {
-	public abstract class BillForManipulationModel
+	public abstract class InvoiceForManipulationModel
 	{
 
         [MaxLength(100, ErrorMessage = "Test Customer shouldn't have more than 100 characters.")]

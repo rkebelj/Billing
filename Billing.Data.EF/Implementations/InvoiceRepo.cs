@@ -14,40 +14,40 @@ using System.Threading.Tasks;
 
 namespace Billing.Data.EF.Implementations
 {
-	public class BillRepo : IBillRepo
+	public class InvoiceRepo : IInvoiceRepo
 	{
 
-		private readonly BillingContext _context;
+		private readonly InvoiceContext _context;
 		private readonly IPropertyMappingService _propertyMappingService;
 
 
-		public BillRepo(BillingContext context, IPropertyMappingService propertyMappingService)
+		public InvoiceRepo(InvoiceContext context, IPropertyMappingService propertyMappingService)
 		{
 			_context = context;
 			_propertyMappingService = propertyMappingService ??
 				throw new ArgumentNullException(nameof(propertyMappingService));
 		}
 
-		public async Task AddBillAsync(Bill bill)
+		public async Task AddBillAsync(Invoice bill)
 		{
-			await _context.Bill.AddAsync(bill);
+			await _context.Invoice.AddAsync(bill);
 
 		}
 
 		public async Task<bool> BillExistsAsync(int BillId)
 		{
-			return await _context.Bill.AnyAsync(l => l.Id == BillId);
+			return await _context.Invoice.AnyAsync(l => l.Id == BillId);
 		}
 
-		public void DeleteBill(Bill Bill)
+		public void DeleteBill(Invoice Bill)
 		{
-			_context.Bill.Remove(Bill);
+			_context.Invoice.Remove(Bill);
 
 		}
 
-		public async Task<PagedList<Bill>> GetBillAsync(BillResourceParameters BillParameters)
+		public async Task<PagedList<Invoice>> GetBillAsync(InvoiceResourceParameters BillParameters)
 		{
-			var collection = _context.Bill
+			var collection = _context.Invoice
 			   .OrderBy(a => a.Id)
 			   .AsQueryable();
 
@@ -63,21 +63,21 @@ namespace Billing.Data.EF.Implementations
 			if (!string.IsNullOrWhiteSpace(BillParameters.OrderBy))
 			{
 				var exercisePropertyMappingDictionary =
-					_propertyMappingService.GetPropertyMapping<BillModel, Bill>();
+					_propertyMappingService.GetPropertyMapping<InvoiceModel, Invoice>();
 
 				collection = collection.ApplySort(BillParameters.OrderBy, exercisePropertyMappingDictionary);
 			}
 
 
-			return await PagedList<Bill>.Create(
+			return await PagedList<Invoice>.Create(
 				collection,
 				BillParameters.PageNumber,
 				BillParameters.PageSize);
 		}
 
-		public async Task<Bill> GetBillAsync(int BillId)
+		public async Task<Invoice> GetBillAsync(int BillId)
 		{
-			return await _context.Bill
+			return await _context.Invoice
 			   .Where(l => l.Id == BillId)
 			   .FirstOrDefaultAsync();
 		}
@@ -87,7 +87,7 @@ namespace Billing.Data.EF.Implementations
 			return (await _context.SaveChangesAsync() >= 0);
 		}
 
-		public void UpdateBill(Bill Bill)
+		public void UpdateBill(Invoice Bill)
 		{
 			//for this purpose context tracking is used
 		}

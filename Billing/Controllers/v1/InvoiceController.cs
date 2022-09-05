@@ -18,15 +18,15 @@ namespace Billing.API.Controllers.v1
 	[ApiController]
     [ApiVersion("1.0")]
     [Route("api/v1/[controller]")]
-	public class BillController : ControllerBase
+	public class InvoiceController : ControllerBase
 	{
 		private readonly IPropertyMappingService _propertyMappingService;
 		private readonly IPropertyCheckerService _propertyCheckerService;
-		private readonly IBillRepo _billRepo;
+		private readonly IInvoiceRepo _billRepo;
 		private readonly IUrlHelper _urlHelper;
 		private readonly IMapper _mapper;
 
-		public BillController(IBillRepo billRepo,
+		public InvoiceController(IInvoiceRepo billRepo,
 							 IUrlHelper urlHelper,
 							 IMapper mapper,
 							 IPropertyMappingService propertyMappingService,
@@ -42,15 +42,15 @@ namespace Billing.API.Controllers.v1
 		[HttpGet(Name = "GetBill")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesDefaultResponseType]
-		public async Task<ActionResult<IEnumerable<BillModel>>> GetBill([FromQuery] BillResourceParameters BillResourceParameters)
+		public async Task<ActionResult<IEnumerable<InvoiceModel>>> GetBill([FromQuery] InvoiceResourceParameters BillResourceParameters)
 		{
-			if (!_propertyMappingService.ValidMappingExistsFor<BillModel, Bill>
+			if (!_propertyMappingService.ValidMappingExistsFor<InvoiceModel, Invoice>
 				(BillResourceParameters.OrderBy))
 			{
 				return BadRequest();
 			}
 
-			if (!_propertyCheckerService.TypeHasProperties<BillModel>
+			if (!_propertyCheckerService.TypeHasProperties<InvoiceModel>
 				(BillResourceParameters.Fields))
 			{
 				return BadRequest();
@@ -78,7 +78,7 @@ namespace Billing.API.Controllers.v1
 
 			Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
 
-			var BillToReturn = _mapper.Map<IEnumerable<BillModel>>(BillFromDatabase);
+			var BillToReturn = _mapper.Map<IEnumerable<InvoiceModel>>(BillFromDatabase);
 
 			return Ok(BillToReturn.ShapeData(BillResourceParameters.Fields));
 		}
@@ -87,9 +87,9 @@ namespace Billing.API.Controllers.v1
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesDefaultResponseType]
-		public async Task<ActionResult<BillModel>> GetSingleBill(int id, [FromQuery] string? fields)
+		public async Task<ActionResult<InvoiceModel>> GetSingleBill(int id, [FromQuery] string? fields)
 		{
-			if (!_propertyCheckerService.TypeHasProperties<BillModel>(fields))
+			if (!_propertyCheckerService.TypeHasProperties<InvoiceModel>(fields))
 			{
 				return BadRequest();
 			}
@@ -101,19 +101,19 @@ namespace Billing.API.Controllers.v1
 				return NotFound();
 			}
 
-			var BillToReturn = _mapper.Map<BillModel>(BillFromDatabase);
+			var BillToReturn = _mapper.Map<InvoiceModel>(BillFromDatabase);
 			return Ok(BillToReturn.ShapeData(fields));
 		}
 
 		[HttpPost(Name = "CreateBill")]
 		[ProducesResponseType(StatusCodes.Status201Created)]
-		public async Task<ActionResult<BillModel>> CreateBill([FromBody] BillForCreationModel Bill)
+		public async Task<ActionResult<InvoiceModel>> CreateBill([FromBody] InvoiceForCreationModel  Bill)
 		{
-			var BillEntity = _mapper.Map<Bill>(Bill);
+			var BillEntity = _mapper.Map<Invoice>(Bill);
 			await _billRepo.AddBillAsync(BillEntity);
 			await _billRepo.SaveAsync(); //TODO: check for errors
 
-			var BillToReturn = _mapper.Map<BillModel>(BillEntity);
+			var BillToReturn = _mapper.Map<InvoiceModel>(BillEntity);
 
 			return CreatedAtRoute(nameof(GetSingleBill), new { id = BillToReturn.Id }, BillToReturn);
 		}
@@ -129,19 +129,19 @@ namespace Billing.API.Controllers.v1
 		[ProducesResponseType(StatusCodes.Status201Created)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesDefaultResponseType]
-		public async Task<IActionResult> UpdateBill(int id, BillForUpdateModel Bill)
+		public async Task<IActionResult> UpdateBill(int id, InvoiceForUpdateModel Bill)
 		{
 			var BillFromDatabase = await _billRepo.GetBillAsync(id);
 
 			if (BillFromDatabase == null)
 			{
-				var BillToAdd = _mapper.Map<Bill>(Bill);
+				var BillToAdd = _mapper.Map<Invoice>(Bill);
 				BillToAdd.Id = id;
 
 				await _billRepo.AddBillAsync(BillToAdd);
 				await _billRepo.SaveAsync();
 
-				var BillToReturn = _mapper.Map<BillModel>(BillToAdd);
+				var BillToReturn = _mapper.Map<InvoiceModel>(BillToAdd);
 
 				return CreatedAtRoute(nameof(GetSingleBill), new { id = BillToReturn.Id }, BillToReturn);
 			}
@@ -157,13 +157,13 @@ namespace Billing.API.Controllers.v1
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(StatusCodes.Status201Created)]
-		public async Task<ActionResult> PartiallyUpdateBill(int id, JsonPatchDocument<BillForUpdateModel> patchDocument)
+		public async Task<ActionResult> PartiallyUpdateBill(int id, JsonPatchDocument<InvoiceForUpdateModel> patchDocument)
 		{
 			var BillFromDatabase = await _billRepo.GetBillAsync(id);
 
 			if (BillFromDatabase == null)
 			{
-				var Bill = new BillForUpdateModel();
+				var Bill = new InvoiceForUpdateModel();
 				patchDocument.ApplyTo(Bill);//TODO: check if ModelState needs to be passed
 
 				if (!TryValidateModel(Bill))
@@ -171,18 +171,18 @@ namespace Billing.API.Controllers.v1
 					return ValidationProblem(ModelState);
 				}
 
-				var BillToAdd = _mapper.Map<Bill>(Bill);
+				var BillToAdd = _mapper.Map<Invoice>(Bill);
 				BillToAdd.Id = id;
 
 				await _billRepo.AddBillAsync(BillToAdd);
 				await _billRepo.SaveAsync();
 
-				var BillToReturn = _mapper.Map<BillModel>(BillToAdd);
+				var BillToReturn = _mapper.Map<InvoiceModel>(BillToAdd);
 
 				return CreatedAtRoute(nameof(GetSingleBill), new { id = BillToReturn.Id }, BillToReturn);
 			}
 
-			var BillToPatch = _mapper.Map<BillForUpdateModel>(BillFromDatabase);
+			var BillToPatch = _mapper.Map<InvoiceForUpdateModel>(BillFromDatabase);
 			patchDocument.ApplyTo(BillToPatch);
 
 			if (!TryValidateModel(BillToPatch))
@@ -226,7 +226,7 @@ namespace Billing.API.Controllers.v1
 
 
 		private string CreateBillResourceUri(
-			BillResourceParameters resourceParameters,
+			InvoiceResourceParameters resourceParameters,
 			ResourceUriType type)
 		{
 			switch (type)

@@ -22,13 +22,13 @@ builder.Services.AddControllers(options =>
 }).AddXmlDataContractSerializerFormatters().AddControllersAsServices();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
-builder.Services.AddDbContext<BillingContext>(
+builder.Services.AddDbContext<InvoiceContext>(
 				options => options.UseSqlServer(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
 builder.Services.AddTransient<IPropertyMappingService, PropertyMappingService>();
 builder.Services.AddTransient<IPropertyCheckerService, PropertyCheckerService>();
 
-builder.Services.AddTransient<IBillRepo, BillRepo>();
+builder.Services.AddTransient<IInvoiceRepo, InvoiceRepo>();
 //builder.Services.AddTransient<ICustomFinanceDataRepo, CustomFinanceDataRepo>();
 //builder.Services.AddTransient<IWorkTypeRepo, WorkTypeRepo>();
 
@@ -71,7 +71,7 @@ app.UseEndpoints(endpoints =>
 
 using (var scope = app.Services.CreateScope())
 {
-	var dbContext = scope.ServiceProvider.GetRequiredService<BillingContext>();
+	var dbContext = scope.ServiceProvider.GetRequiredService<InvoiceContext>();
 	dbContext.EnsureSeedDataForContext();
 	// use context
 }

@@ -10,11 +10,16 @@ namespace Billing.Models.InvoiceMaterial
 {
 	public class InvoiceMaterialModel
 	{
-		public int InvoiceId { get; set; }
-		public InvoiceModel? Invoice { get; set; }
-		public int MateriaId { get; set; }
-		public MaterialModel? Material { get; set; }
 		public int Quantity { get; set; }
+
+
+		public int InvoiceId { get; set; }
+		//public InvoiceModel? Invoice { get; set; }
+
+		public int MateriaId { get; set; }
+		//public MaterialModel? Material { get; set; }
+
+
 
 	}
 }

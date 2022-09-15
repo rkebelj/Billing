@@ -13,19 +13,21 @@ to lahk skoperaš
 - Run the following commands in **Package Manager Console (PMC)**: 
 
 ```PM>
-Add-Migration MigrationName
 Update-Database
+Add-Migration MigrationName
 ```
 
 OR 
 
-- Run the following commands using .NET Core CLI: 
+- Run the following commands using **.NET Core CLI**: 
 
  ```CLI
-dotnet ef migrations add MigrationName
 dotnet ef database update
+dotnet ef migrations add MigrationName
 ```
 
 
 
+## Swagger on
+`https://localhost:7134`
 

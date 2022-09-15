@@ -1,4 +1,6 @@
-﻿namespace Billing.Models
+﻿using Billing.Models.Invoice;
+
+namespace Billing.Models
 {
 	public class CustomerModel
 	{
@@ -10,6 +12,9 @@
 		public string? PostalCode{ get; set; }
 		public string? PhoneNumber{ get; set; }
 		public string? Email{ get; set; }
+
+		public IEnumerable<InvoiceModel>? Invoices { get; set; }
+		public IEnumerable<InvoiceModel>? Meeting { get; set; }
 
 	}
 }

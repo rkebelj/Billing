@@ -1,4 +1,5 @@
-﻿using Billing.Models.InvoiceMaterial;
+﻿using Billing.Models.Invoice;
+using Billing.Models.InvoiceMaterial;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,7 +17,7 @@ namespace Billing.Models.Material
 		public string? Unit { get; set; }
 		public string? Comment { get; set; }
 
-		public IList<InvoiceMaterialModel>? InvoiceMaterials { get; set; }
+		public List<InvoiceModel> Invoices { get; set; }
 
 
 	}

@@ -19,6 +19,8 @@ namespace Billing.Data.Entities
 		[MaxLength(100)]
 		public string? Name { get; set; }
 		[Required]
+		[Column(TypeName = "float")]
+
 		public int Price { get; set; }
 		[Required]
 		[MaxLength(100)]

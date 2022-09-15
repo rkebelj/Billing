@@ -5,7 +5,7 @@ using Billing.Data.Entities;
 using Billing.Helpers;
 using Billing.Helpers.ResourceParameters;
 using Billing.Models;
-using Billing.Models.Bill;
+using Billing.Models.Invoice;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -16,110 +16,110 @@ using Newtonsoft.Json;
 namespace Billing.API.Controllers.v1
 {
 	[ApiController]
-    [ApiVersion("1.0")]
-    [Route("api/v1/[controller]")]
+	[ApiVersion("1.0")]
+	[Route("api/v1/[controller]")]
 	public class InvoiceController : ControllerBase
 	{
 		private readonly IPropertyMappingService _propertyMappingService;
 		private readonly IPropertyCheckerService _propertyCheckerService;
-		private readonly IInvoiceRepo _billRepo;
+		private readonly IInvoiceRepo _invoiceRepo;
 		private readonly IUrlHelper _urlHelper;
 		private readonly IMapper _mapper;
 
-		public InvoiceController(IInvoiceRepo billRepo,
+		public InvoiceController(IInvoiceRepo invoiceRepo,
 							 IUrlHelper urlHelper,
 							 IMapper mapper,
 							 IPropertyMappingService propertyMappingService,
 							 IPropertyCheckerService propertyCheckerService)
 		{
-			_billRepo = billRepo;
+			_invoiceRepo = invoiceRepo;
 			_urlHelper = urlHelper;
 			_mapper = mapper;
 			_propertyMappingService = propertyMappingService;
 			_propertyCheckerService = propertyCheckerService;
 		}
 
-		[HttpGet(Name = "GetBill")]
+		[HttpGet(Name = "GetInvoice")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesDefaultResponseType]
-		public async Task<ActionResult<IEnumerable<InvoiceModel>>> GetBill([FromQuery] InvoiceResourceParameters BillResourceParameters)
+		public async Task<ActionResult<IEnumerable<InvoiceModel>>> GetInvoice([FromQuery] InvoiceResourceParameters InvoiceResourceParameters)
 		{
 			if (!_propertyMappingService.ValidMappingExistsFor<InvoiceModel, Invoice>
-				(BillResourceParameters.OrderBy))
+				(InvoiceResourceParameters.OrderBy))
 			{
 				return BadRequest();
 			}
 
 			if (!_propertyCheckerService.TypeHasProperties<InvoiceModel>
-				(BillResourceParameters.Fields))
+				(InvoiceResourceParameters.Fields))
 			{
 				return BadRequest();
 			}
 
-			var BillFromDatabase = await _billRepo.GetBillAsync(BillResourceParameters);
+			var InvoiceFromDatabase = await _invoiceRepo.GetInvoiceAsync(InvoiceResourceParameters);
 
-			var previousPageLink = BillFromDatabase.HasPrevious ?
-			   CreateBillResourceUri(BillResourceParameters,
+			var previousPageLink = InvoiceFromDatabase.HasPrevious ?
+			   CreateInvoiceResourceUri(InvoiceResourceParameters,
 			   ResourceUriType.PreviousPage) : null;
 
-			var nextPageLink = BillFromDatabase.HasNext ?
-				CreateBillResourceUri(BillResourceParameters,
+			var nextPageLink = InvoiceFromDatabase.HasNext ?
+				CreateInvoiceResourceUri(InvoiceResourceParameters,
 				ResourceUriType.NextPage) : null;
 
 			var paginationMetadata = new
 			{
-				totalCount = BillFromDatabase.TotalCount,
-				pageSize = BillFromDatabase.PageSize,
-				currentPage = BillFromDatabase.CurrentPage,
-				totalPages = BillFromDatabase.TotalPages,
+				totalCount = InvoiceFromDatabase.TotalCount,
+				pageSize = InvoiceFromDatabase.PageSize,
+				currentPage = InvoiceFromDatabase.CurrentPage,
+				totalPages = InvoiceFromDatabase.TotalPages,
 				previousPageUri = previousPageLink,
 				nextPageUri = nextPageLink
 			};
 
 			Response.Headers.Add("X-Pagination", JsonConvert.SerializeObject(paginationMetadata));
 
-			var BillToReturn = _mapper.Map<IEnumerable<InvoiceModel>>(BillFromDatabase);
+			var InvoiceToReturn = _mapper.Map<IEnumerable<InvoiceModel>>(InvoiceFromDatabase);
 
-			return Ok(BillToReturn.ShapeData(BillResourceParameters.Fields));
+			return Ok(InvoiceToReturn.ShapeData(InvoiceResourceParameters.Fields));
 		}
 
-		[HttpGet("{id}", Name = "GetSingleBill")]
+		[HttpGet("{id}", Name = "GetSingleInvoice")]
 		[ProducesResponseType(StatusCodes.Status200OK)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesDefaultResponseType]
-		public async Task<ActionResult<InvoiceModel>> GetSingleBill(int id, [FromQuery] string? fields)
+		public async Task<ActionResult<InvoiceModel>> GetSingleInvoice(int id, [FromQuery] string? fields)
 		{
 			if (!_propertyCheckerService.TypeHasProperties<InvoiceModel>(fields))
 			{
 				return BadRequest();
 			}
 
-			var BillFromDatabase = await _billRepo.GetBillAsync(id);
+			var InvoiceFromDatabase = await _invoiceRepo.GetInvoiceAsync(id);
 
-			if (BillFromDatabase == null)
+			if (InvoiceFromDatabase == null)
 			{
 				return NotFound();
 			}
 
-			var BillToReturn = _mapper.Map<InvoiceModel>(BillFromDatabase);
-			return Ok(BillToReturn.ShapeData(fields));
+			var InvoiceToReturn = _mapper.Map<InvoiceModel>(InvoiceFromDatabase);
+			return Ok(InvoiceToReturn.ShapeData(fields));
 		}
 
-		[HttpPost(Name = "CreateBill")]
+		[HttpPost(Name = "CreateInvoice")]
 		[ProducesResponseType(StatusCodes.Status201Created)]
-		public async Task<ActionResult<InvoiceModel>> CreateBill([FromBody] InvoiceForCreationModel  Bill)
+		public async Task<ActionResult<InvoiceModel>> CreateInvoice([FromBody] InvoiceForCreationModel Invoice)
 		{
-			var BillEntity = _mapper.Map<Invoice>(Bill);
-			await _billRepo.AddBillAsync(BillEntity);
-			await _billRepo.SaveAsync(); //TODO: check for errors
+			var InvoiceEntity = _mapper.Map<Invoice>(Invoice);
+			await _invoiceRepo.AddInvoiceAsync(InvoiceEntity);
+			await _invoiceRepo.SaveAsync(); //TODO: check for errors
 
-			var BillToReturn = _mapper.Map<InvoiceModel>(BillEntity);
+			var InvoiceToReturn = _mapper.Map<InvoiceModel>(InvoiceEntity);
 
-			return CreatedAtRoute(nameof(GetSingleBill), new { id = BillToReturn.Id }, BillToReturn);
+			return CreatedAtRoute(nameof(GetSingleInvoice), new { id = InvoiceToReturn.Id }, InvoiceToReturn);
 		}
 
 		[HttpOptions]
-		public IActionResult GetBillOptions()
+		public IActionResult GetInvoiceOptions()
 		{
 			Response.Headers.Add("Allow", "GET,OPTIONS,POST,PUT,PATCH,DELETE");
 			return Ok();
@@ -129,26 +129,26 @@ namespace Billing.API.Controllers.v1
 		[ProducesResponseType(StatusCodes.Status201Created)]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesDefaultResponseType]
-		public async Task<IActionResult> UpdateBill(int id, InvoiceForUpdateModel Bill)
+		public async Task<IActionResult> UpdateInvoice(int id, InvoiceForUpdateModel Invoice)
 		{
-			var BillFromDatabase = await _billRepo.GetBillAsync(id);
+			var InvoiceFromDatabase = await _invoiceRepo.GetInvoiceAsync(id);
 
-			if (BillFromDatabase == null)
+			if (InvoiceFromDatabase == null)
 			{
-				var BillToAdd = _mapper.Map<Invoice>(Bill);
-				BillToAdd.Id = id;
+				var InvoiceToAdd = _mapper.Map<Invoice>(Invoice);
+				InvoiceToAdd.Id = id;
 
-				await _billRepo.AddBillAsync(BillToAdd);
-				await _billRepo.SaveAsync();
+				await _invoiceRepo.AddInvoiceAsync(InvoiceToAdd);
+				await _invoiceRepo.SaveAsync();
 
-				var BillToReturn = _mapper.Map<InvoiceModel>(BillToAdd);
+				var InvoiceToReturn = _mapper.Map<InvoiceModel>(InvoiceToAdd);
 
-				return CreatedAtRoute(nameof(GetSingleBill), new { id = BillToReturn.Id }, BillToReturn);
+				return CreatedAtRoute(nameof(GetSingleInvoice), new { id = InvoiceToReturn.Id }, InvoiceToReturn);
 			}
 
-			_mapper.Map(Bill, BillFromDatabase);
-			_billRepo.UpdateBill(BillFromDatabase);
-			await _billRepo.SaveAsync();
+			_mapper.Map(Invoice, InvoiceFromDatabase);
+			_invoiceRepo.UpdateInvoice(InvoiceFromDatabase);
+			await _invoiceRepo.SaveAsync();
 
 			return NoContent();
 		}
@@ -157,62 +157,62 @@ namespace Billing.API.Controllers.v1
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
 		[ProducesResponseType(StatusCodes.Status201Created)]
-		public async Task<ActionResult> PartiallyUpdateBill(int id, JsonPatchDocument<InvoiceForUpdateModel> patchDocument)
+		public async Task<ActionResult> PartiallyUpdateInvoice(int id, JsonPatchDocument<InvoiceForUpdateModel> patchDocument)
 		{
-			var BillFromDatabase = await _billRepo.GetBillAsync(id);
+			var InvoiceFromDatabase = await _invoiceRepo.GetInvoiceAsync(id);
 
-			if (BillFromDatabase == null)
+			if (InvoiceFromDatabase == null)
 			{
-				var Bill = new InvoiceForUpdateModel();
-				patchDocument.ApplyTo(Bill);//TODO: check if ModelState needs to be passed
+				var Invoice = new InvoiceForUpdateModel();
+				patchDocument.ApplyTo(Invoice);//TODO: check if ModelState needs to be passed
 
-				if (!TryValidateModel(Bill))
+				if (!TryValidateModel(Invoice))
 				{
 					return ValidationProblem(ModelState);
 				}
 
-				var BillToAdd = _mapper.Map<Invoice>(Bill);
-				BillToAdd.Id = id;
+				var InvoiceToAdd = _mapper.Map<Invoice>(Invoice);
+				InvoiceToAdd.Id = id;
 
-				await _billRepo.AddBillAsync(BillToAdd);
-				await _billRepo.SaveAsync();
+				await _invoiceRepo.AddInvoiceAsync(InvoiceToAdd);
+				await _invoiceRepo.SaveAsync();
 
-				var BillToReturn = _mapper.Map<InvoiceModel>(BillToAdd);
+				var InvoiceToReturn = _mapper.Map<InvoiceModel>(InvoiceToAdd);
 
-				return CreatedAtRoute(nameof(GetSingleBill), new { id = BillToReturn.Id }, BillToReturn);
+				return CreatedAtRoute(nameof(GetSingleInvoice), new { id = InvoiceToReturn.Id }, InvoiceToReturn);
 			}
 
-			var BillToPatch = _mapper.Map<InvoiceForUpdateModel>(BillFromDatabase);
-			patchDocument.ApplyTo(BillToPatch);
+			var InvoiceToPatch = _mapper.Map<InvoiceForUpdateModel>(InvoiceFromDatabase);
+			patchDocument.ApplyTo(InvoiceToPatch);
 
-			if (!TryValidateModel(BillToPatch))
+			if (!TryValidateModel(InvoiceToPatch))
 			{
 				return ValidationProblem(ModelState);
 			}
 
-			_mapper.Map(BillToPatch, BillFromDatabase);
+			_mapper.Map(InvoiceToPatch, InvoiceFromDatabase);
 
-			_billRepo.UpdateBill(BillFromDatabase);
-			await _billRepo.SaveAsync();
+			_invoiceRepo.UpdateInvoice(InvoiceFromDatabase);
+			await _invoiceRepo.SaveAsync();
 
 			return NoContent();
 		}
 
-		[HttpDelete("{id}", Name = ("DeleteBill"))]
+		[HttpDelete("{id}", Name = ("DeleteInvoice"))]
 		[ProducesResponseType(StatusCodes.Status204NoContent)]
 		[ProducesResponseType(StatusCodes.Status404NotFound)]
 		[ProducesDefaultResponseType]
-		public async Task<ActionResult> DeleteBill(int id)
+		public async Task<ActionResult> DeleteInvoice(int id)
 		{
-			var BillFromDatabase = await _billRepo.GetBillAsync(id);
+			var InvoiceFromDatabase = await _invoiceRepo.GetInvoiceAsync(id);
 
-			if (BillFromDatabase == null)
+			if (InvoiceFromDatabase == null)
 			{
 				return NotFound();
 			}
 
-			_billRepo.DeleteBill(BillFromDatabase);
-			await _billRepo.SaveAsync();
+			_invoiceRepo.DeleteInvoice(InvoiceFromDatabase);
+			await _invoiceRepo.SaveAsync();
 
 			return NoContent();
 		}
@@ -225,14 +225,14 @@ namespace Billing.API.Controllers.v1
 		}
 
 
-		private string CreateBillResourceUri(
+		private string CreateInvoiceResourceUri(
 			InvoiceResourceParameters resourceParameters,
 			ResourceUriType type)
 		{
 			switch (type)
 			{
 				case ResourceUriType.PreviousPage:
-					return _urlHelper.Link("GetBill",
+					return _urlHelper.Link("GetInvoice",
 						new
 						{
 							orderBy = resourceParameters.OrderBy,
@@ -243,7 +243,7 @@ namespace Billing.API.Controllers.v1
 						}
 					);
 				case ResourceUriType.NextPage:
-					return _urlHelper.Link("GetBill",
+					return _urlHelper.Link("GetInvoice",
 						new
 						{
 							orderBy = resourceParameters.OrderBy,
@@ -255,7 +255,7 @@ namespace Billing.API.Controllers.v1
 					);
 				case ResourceUriType.Current:
 				default:
-					return _urlHelper.Link("GetBill",
+					return _urlHelper.Link("GetInvoice",
 						new
 						{
 							orderBy = resourceParameters.OrderBy,

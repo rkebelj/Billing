@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Billing.Models.Invoice;
-using Invoice.Models.Material;
+using Billing.Models.Material;
 
 namespace Billing.Models.InvoiceMaterial
 {

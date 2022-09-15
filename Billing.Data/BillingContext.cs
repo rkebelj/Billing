@@ -4,10 +4,10 @@ using Billing.Data.Entities;
 
 namespace Billing.Data;
 
-public class InvoiceContext : DbContext
+public class BillingContext : DbContext
 {
 
-	public InvoiceContext(DbContextOptions<InvoiceContext> options) : base(options)
+	public BillingContext(DbContextOptions<BillingContext> options) : base(options)
 	{
 		//Database.Migrate();
 	}
@@ -23,5 +23,6 @@ public class InvoiceContext : DbContext
 
 
 	public DbSet<Invoice> Invoice { get; set; }
+	public DbSet<Material> Material{ get; set; }
 
 }

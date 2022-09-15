@@ -5,7 +5,7 @@
         public int Id { get; set; }
         public int CustomerId { get; set; }
         public DateTime Date { get; set; }
-        public int DDV { get; set; } = 22;
+        public  static int DDV { get; set; } = 22;
         public int? Discount { get; set; }
 
 

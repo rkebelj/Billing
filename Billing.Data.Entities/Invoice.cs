@@ -10,10 +10,18 @@ namespace Billing.Data.Entities
 		[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
 		public int Id { get; set; }
 		[Required]
-		//public int ProjectId { get; set; }
+		public int CustomerId { get; set; }
 		//public int WorkTypeId { get; set; }
-		public string? TestCustomer { get; set; }
+		[Required]
+		//[DataType(DataType.Date)]
+		//[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
+		[DataType(DataType.Date)]
+		[DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}", ApplyFormatInEditMode = true)]
+		public DateTime? Date{ get; set; }
+		[Required]
 		[MaxLength(100)]
-		public string? Progress { get; set; }
+		public static int DDV { get; set; } = 22;
+		public int? Discount { get; set; }
+
 	}
 }

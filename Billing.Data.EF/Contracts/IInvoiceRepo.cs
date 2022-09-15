@@ -13,12 +13,12 @@ namespace Billing.Data.EF.Contracts
 {
 	public interface IInvoiceRepo
 	{
-		Task<PagedList<Invoice>> GetBillAsync(InvoiceResourceParameters BillParameters);
-		Task<Invoice> GetBillAsync(int BillId);
-		Task AddBillAsync(Invoice bill);
-		void UpdateBill(Invoice Bill);
-		Task<bool> BillExistsAsync(int BillId);
-		void DeleteBill(Invoice Bill);
+		Task<PagedList<Invoice>> GetInvoiceAsync(InvoiceResourceParameters invoiceParameters);
+		Task<Invoice> GetInvoiceAsync(int invoice);
+		Task AddInvoiceAsync(Invoice invoice);
+		void UpdateInvoice(Invoice invoice);
+		Task<bool> InvoiceExistsAsync(int invoiceId);
+		void DeleteInvoice(Invoice invoice);
 		Task<bool> SaveAsync();
 	}
 }

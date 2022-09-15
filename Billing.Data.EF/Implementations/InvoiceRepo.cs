@@ -5,6 +5,7 @@ using Billing.Data.Entities;
 using Billing.Helpers;
 using Billing.Helpers.ResourceParameters;
 using Billing.Models;
+using Billing.Models.Invoice;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -17,68 +18,68 @@ namespace Billing.Data.EF.Implementations
 	public class InvoiceRepo : IInvoiceRepo
 	{
 
-		private readonly InvoiceContext _context;
+		private readonly BillingContext _context;
 		private readonly IPropertyMappingService _propertyMappingService;
 
 
-		public InvoiceRepo(InvoiceContext context, IPropertyMappingService propertyMappingService)
+		public InvoiceRepo(BillingContext context, IPropertyMappingService propertyMappingService)
 		{
 			_context = context;
 			_propertyMappingService = propertyMappingService ??
 				throw new ArgumentNullException(nameof(propertyMappingService));
 		}
 
-		public async Task AddBillAsync(Invoice bill)
+		public async Task AddInvoiceAsync(Invoice invoice)
 		{
-			await _context.Invoice.AddAsync(bill);
+			await _context.Invoice.AddAsync(invoice);
 
 		}
 
-		public async Task<bool> BillExistsAsync(int BillId)
+		public async Task<bool> InvoiceExistsAsync(int invoiceId)
 		{
-			return await _context.Invoice.AnyAsync(l => l.Id == BillId);
+			return await _context.Invoice.AnyAsync(l => l.Id == invoiceId);
 		}
 
-		public void DeleteBill(Invoice Bill)
+		public void DeleteInvoice(Invoice invoice)
 		{
-			_context.Invoice.Remove(Bill);
+			_context.Invoice.Remove(invoice);
 
 		}
 
-		public async Task<PagedList<Invoice>> GetBillAsync(InvoiceResourceParameters BillParameters)
+		public async Task<PagedList<Invoice>> GetInvoiceAsync(InvoiceResourceParameters invoiceParameters)
 		{
 			var collection = _context.Invoice
 			   .OrderBy(a => a.Id)
 			   .AsQueryable();
 
-			if (!string.IsNullOrEmpty(BillParameters.SearchQuery))
+			if (!string.IsNullOrEmpty(invoiceParameters.SearchQuery))
 			{
-				var searchQuery = BillParameters.SearchQuery
+				var searchQuery = invoiceParameters.SearchQuery
 					.Trim().ToLower();
 
 				collection = collection
 					.Where(a => a.Id.ToString().Contains(searchQuery));
 			}
 
-			if (!string.IsNullOrWhiteSpace(BillParameters.OrderBy))
+			if (!string.IsNullOrWhiteSpace(invoiceParameters.OrderBy))
 			{
 				var exercisePropertyMappingDictionary =
 					_propertyMappingService.GetPropertyMapping<InvoiceModel, Invoice>();
 
-				collection = collection.ApplySort(BillParameters.OrderBy, exercisePropertyMappingDictionary);
+				collection = collection.ApplySort(invoiceParameters.OrderBy, exercisePropertyMappingDictionary);
 			}
 
 
 			return await PagedList<Invoice>.Create(
 				collection,
-				BillParameters.PageNumber,
-				BillParameters.PageSize);
+				invoiceParameters.PageNumber,
+				invoiceParameters.PageSize);
 		}
 
-		public async Task<Invoice> GetBillAsync(int BillId)
+		public async Task<Invoice> GetInvoiceAsync(int invoiceId)
 		{
 			return await _context.Invoice
-			   .Where(l => l.Id == BillId)
+			   .Where(l => l.Id == invoiceId)
 			   .FirstOrDefaultAsync();
 		}
 
@@ -87,7 +88,7 @@ namespace Billing.Data.EF.Implementations
 			return (await _context.SaveChangesAsync() >= 0);
 		}
 
-		public void UpdateBill(Invoice Bill)
+		public void UpdateInvoice(Invoice invoice)
 		{
 			//for this purpose context tracking is used
 		}

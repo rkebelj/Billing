@@ -1,6 +1,8 @@
 ﻿using Billing.Business.Contracts;
 using Billing.Data.Entities;
 using Billing.Models;
+using Billing.Models.Invoice;
+using Billing.Models.Material;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,18 +13,31 @@ namespace Billing.Business.Implementations
 {
 	public class PropertyMappingService : IPropertyMappingService
 	{
-		private Dictionary<string, PropertyMappingValue> _billMapping =
+		private Dictionary<string, PropertyMappingValue> _invoiceMapping =
 			new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
 			{
 				{ "Id", new PropertyMappingValue(new List<string>() { "Id" }) },
-				{ "TestCustomer", new PropertyMappingValue(new List<string>() { "TestCustomer" }) },
-				{ "Progress", new PropertyMappingValue(new List<string>() { "Progress" }) },
+				{ "CustomerId", new PropertyMappingValue(new List<string>() { "CustomerId" }) },
+				{ "Date", new PropertyMappingValue(new List<string>() { "Date" }) },
+				{ "DDV", new PropertyMappingValue(new List<string>() { "DDV" }) },
+				{ "Discount", new PropertyMappingValue(new List<string>() { "Discount" }) },
+			};
+		private Dictionary<string, PropertyMappingValue> _materialMapping =
+			new Dictionary<string, PropertyMappingValue>(StringComparer.OrdinalIgnoreCase)
+			{
+				{ "Id", new PropertyMappingValue(new List<string>() { "Id" }) },
+				{ "CategoryId", new PropertyMappingValue(new List<string>() { "CategoryId" }) },
+				{ "Name", new PropertyMappingValue(new List<string>() { "Name" }) },
+				{ "Price", new PropertyMappingValue(new List<string>() { "Price" }) },
+				{ "Unit", new PropertyMappingValue(new List<string>() { "Unit" }) },
+				{ "Comment", new PropertyMappingValue(new List<string>() { "Comment" }) },
 			};
 		private IList<IPropertyMapping> _propertyMappings = new List<IPropertyMapping>();
 
 		public PropertyMappingService()
 		{
-			_propertyMappings.Add(new PropertyMapping<InvoiceModel, Invoice>(_billMapping));
+			_propertyMappings.Add(new PropertyMapping<InvoiceModel, Invoice>(_invoiceMapping));
+			_propertyMappings.Add(new PropertyMapping<MaterialModel, Material>(_invoiceMapping));
 		}
 		public bool ValidMappingExistsFor<TSource, TDestination>(string fields)
 		{
